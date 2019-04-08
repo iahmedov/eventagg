@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+persistence:
+  worker_count: 4
+  dir: /persistence/
+
+aggregators:
+  - name: "realtime_count"
+    alias: "realtime_count"

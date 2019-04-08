@@ -1,0 +1,21 @@
+version: "2.2"
+services:
+  eventagg:
+    build:
+      context: ..
+      dockerfile: deployments/Dockerfile
+    container_name: eventagg
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../deployments/:/deployments/
+      - ../tmp/:/persistence/
+    command: -config=/deployments/local.yaml
+  wrk:
+    image: williamyeh/wrk
+    volumes:
+      - ../deployments/:/data/
+    depends_on:
+      eventagg:
+        condition: service_started
+    command: -c 5 -t 5 -d 3s --latency -s post.lua http://eventagg:8080/api/v1/event
