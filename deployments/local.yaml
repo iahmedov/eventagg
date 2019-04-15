@@ -2,9 +2,13 @@ server:
   port: 8080
 
 persistence:
-  worker_count: 4
+  worker_count: 8
   dir: /persistence/
 
 aggregators:
   - name: "realtime_count"
     alias: "realtime_count"
+  - name: "lazy_persistence_range_count"
+    alias: "zzz"
+    params:
+      data_dir: "/persistence/"

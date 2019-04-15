@@ -17,10 +17,10 @@ type (
 const KeyEventType = "event_type"
 
 func init() {
-	aggregator.RegisterAggregator("realtime_count", newCountAggregator)
+	aggregator.RegisterAggregator("realtime_count", NewCountAggregator)
 }
 
-func newCountAggregator(aggregator.Config) (aggregator.Aggregator, error) {
+func NewCountAggregator(aggregator.Config) (aggregator.Aggregator, error) {
 	return &countAggregator{
 		counts: map[string]int64{},
 	}, nil

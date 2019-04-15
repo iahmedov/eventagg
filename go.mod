@@ -11,6 +11,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/leodido/go-urn v1.1.0 // indirect
 	github.com/pkg/errors v0.8.1
+	github.com/spf13/afero v1.2.2
 	github.com/stretchr/testify v1.3.0
 	golang.org/x/sync v0.0.0-20190227155943-e225da77a7e6
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect

@@ -17,6 +17,7 @@ import (
 	"github.com/iahmedov/eventagg/pkg/server"
 
 	// plugin registrations
+	_ "github.com/iahmedov/eventagg/pkg/aggregator/lazy"
 	_ "github.com/iahmedov/eventagg/pkg/aggregator/realtime"
 
 	"github.com/go-kit/kit/log"

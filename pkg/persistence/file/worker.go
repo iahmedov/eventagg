@@ -26,14 +26,15 @@ type worker struct {
 
 // output format:
 // - data.out - [json] per line
-// - data.idx - [begin_pos,end_pos] per line
+// - data.idx - [begin_pos,end_pos,ts] per line
 // 		- begin_pos - begin position of event data
 // 		- end_pos - end position of event data
-func dataFilePath(path string) string {
+// 		- ts - event timestamp
+func DataFilePath(path string) string {
 	return filepath.Join(path, "data.out")
 }
 
-func indexFilePath(path string) string {
+func IndexFilePath(path string) string {
 	return filepath.Join(path, "data.idx")
 }
 
@@ -62,7 +63,7 @@ func newWorker(path string) (*worker, error) {
 		}
 	}
 
-	fl, err := os.OpenFile(dataFilePath(path), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	fl, err := os.OpenFile(DataFilePath(path), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to open file")
 	}
@@ -74,7 +75,7 @@ func newWorker(path string) (*worker, error) {
 	w.out = fl
 	w.outWriter = fl
 
-	idxFl, err := os.OpenFile(indexFilePath(path), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	idxFl, err := os.OpenFile(IndexFilePath(path), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to open index file")
 	}
@@ -101,13 +102,8 @@ func (w *worker) Add(ev *eventagg.Event) error {
 		return errors.Wrap(err, "failed to write to file")
 	}
 
-	_, err = w.outWriter.Write([]byte{'\n'})
-	if err != nil {
-		return errors.Wrap(err, "failed to write to file")
-	}
-
-	endPos = beginPos + int64(len(content)+1)
-	w.idxWriter.Write([]byte(fmt.Sprintf("%d,%d\n", beginPos, endPos)))
+	endPos = beginPos + int64(len(content))
+	w.idxWriter.Write([]byte(fmt.Sprintf("%d,%d,%d\n", beginPos, endPos, ev.Time)))
 	w.seek = endPos
 
 	return nil
